@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ripple Effect on Touch</title>
+<style>
+  body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: white;
+  }
+
+  #touch-area {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none; /* Prevent default touch actions */
+  }
+
+  .ripple {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background: blue;
+    border-radius: 50%;
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+  }
+
+  @keyframes ripple-animation {
+    to {
+      transform: scale(20);
+      opacity: 0;
+    }
+  }
+</style>
+</head>
+<body>
+<div id="touch-area"></div>
+
+<script>
+  const touchArea = document.getElementById('touch-area');
+
+  touchArea.addEventListener('touchstart', function(e) {
+    // Prevent the default action to ensure the sensitivity of touch
+    e.preventDefault();
+    
+    // Get the position of the touch relative to the top-left of the viewport
+    const touch = e.touches[0];
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    
+    // Calculate touch position relative to the touchArea
+    const rect = this.getBoundingClientRect();
+    const posX = touch.clientX - rect.left;
+    const posY = touch.clientY - rect.top;
+    
+    // Position the ripple where the touch event occurs
+    ripple.style.left = `${posX}px`;
+    ripple.style.top = `${posY}px`;
+
+    // Add the ripple to the touch area
+    this.appendChild(ripple);
+
+    // Remove the ripple after the animation completes
+    setTimeout(() => ripple.remove(), 600); // Animation duration is 600ms
+  }, { passive: false });
+</script>
+</body>
+</html>
